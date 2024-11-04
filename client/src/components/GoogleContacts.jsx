@@ -101,7 +101,7 @@ function GoogleContacts() {
         loader && <Loader/>
       }
       {/* Dialog Box for Contacts */}
-      {isDialogOpen && !loader(
+      {isDialogOpen && !loader &&(
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-md shadow-md max-w-lg w-full">
             <h2 className="text-lg font-semibold mb-4">Contacts</h2>
