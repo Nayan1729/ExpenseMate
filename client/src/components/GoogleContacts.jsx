@@ -84,10 +84,30 @@ function GoogleContacts() {
   };
 
   const handleInvite = (contact) => {
-    // Function to handle the invite action
-    alert(`Invite sent to ${contact.name} at ${contact.phone}`);
+    // Clean the phone number
+    let cleanedPhone = contact.phone.replace(/\D/g, '');
+  
+    // Ensure it starts with '91'
+    if (!cleanedPhone.startsWith('91')) {
+      cleanedPhone = `91${cleanedPhone}`;
+    }
+  
+    // Message to send
+    const message = `Hey! Join me on https://www.google.co.in/. Click the link to sign up: https://www.google.co.in/`;
+    
+    // URL encode the message
+    const encodedMessage = encodeURIComponent(message);
+  
+    // Construct the WhatsApp link
+    const whatsappLink = `https://wa.me/${cleanedPhone}?text=${encodedMessage}`;
+  
+    console.log("WhatsApp Link:", whatsappLink); // Log the link for debugging
+  
+    // Open the WhatsApp link in a new tab
+    window.open(whatsappLink, '_blank');
   };
- 
+  
+  
   
   return (
     <div>
@@ -122,7 +142,7 @@ function GoogleContacts() {
                     <p className="font-medium">{contact.name}</p>
                     <p className="text-gray-600">{contact.phone}</p>
                   </div>
-                  <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-1 rounded" onClick={()=>alert(`alert sent to ${contact.name} at ${contact.phone}`)}>
+                  <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-1 rounded" onClick={()=>handleInvite(contact)}>
                     Invite
                   </button>
                 </div>

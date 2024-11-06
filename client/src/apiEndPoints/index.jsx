@@ -40,3 +40,14 @@ export const getCurrentUser = async()=>{
         
     }
 }
+export const sendEmailInvite = async(email)=>{
+    try {
+        const res = await axios.post(`${base_url}/api/v1/users/sendEmailInvite`,{
+            email
+        },{withCredentials:true})
+        return {success:true,data:res.data};
+        
+    } catch (error) {
+        return {success:false,error:error.message};
+    }
+}

@@ -2,7 +2,7 @@ import ApiError from "../utilities/ApiError.js"
 import  ApiResponse from "../utilities/ApiResponse.js"
 import asyncHandler from "../utilities/asyncHandler.js"
 import { User } from "../models/users.models.js"
-
+import sendEmail from "../utilities/emailService.js"
 
 const options =  { // Options have to be added to send cookies
     httpOnly: true,
@@ -167,6 +167,35 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     }
 
   })
-export {registerUser,loginUser,getCurrentUser,refreshAccessToken}
+  const inviteUsingEmail = asyncHandler(async(req,res)=>{
+    const receiverEmail = req.body.email;
+    if(!receiverEmail){
+        throw new ApiError(400,"Email field is empty");
+    }
 
+    const subject = 'Join ExpenseMate!';
+    const appUrl = "https://www.google.com/"
+    const text = `Hey! Join ${req.user.username}on ExpenseMate. Click the link to sign up: ${appUrl}`;
+    try {
+        console.log("Receiver Email:", receiverEmail); // Log the email to check its value
+        if (!receiverEmail) {
+            throw new ApiError(400, "No recipient email provided.");
+        }
+    
+        const result = await sendEmail(receiverEmail, subject, text);
+        if (result.success) {
+            return res.status(201).json(new ApiResponse(201, result.response, "Invite sent successfully"));
+        } else {
+            console.error("Failed to send email: ", result.error);
+            throw new ApiError(500, "Failed to send Email to the user");
+        }
+    } catch (error) {
+        console.error("Error in email sending controller: ", error.message);
+        throw new ApiError(500, error.message);
+    }
+    
+    
+  })
+export {registerUser,loginUser,getCurrentUser,refreshAccessToken,inviteUsingEmail}
+    
 

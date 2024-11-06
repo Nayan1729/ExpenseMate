@@ -1,5 +1,5 @@
 import { useState } from 'react';
-
+import {sendEmailInvite} from '../apiEndPoints'
 export default function InviteInput() {
     const [email, setEmail] = useState('');
     const [isValidEmail, setIsValidEmail] = useState(true);
@@ -15,11 +15,14 @@ export default function InviteInput() {
         return emailRegex.test(email);
     };
 
-    const handleInviteClick = () => {
+    const handleInviteClick =async () => {
         setIsValidEmail(validateEmail(email));
         if (isValidEmail) {
             // Perform invite action here
-            console.log("Invite sent to:", email);
+            const res = await sendEmailInvite(email);
+            console.log("Invite sent to:",email);
+            console.log(res);
+            
         } else {
             console.log("Please enter a valid email.");
         }
