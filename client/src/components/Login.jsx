@@ -23,7 +23,7 @@ const LoginForm = () => {
                 try {
                     setLoader(true)
                     const res = await getCurrentUser();
-                    setLoader(false)
+                    setLoader(false);
                     if (res.success) {
                         dispatch(loginUser(res.data));
                         setLogin(true);
@@ -37,7 +37,6 @@ const LoginForm = () => {
               })();
         } else {
 
-            
             navigate('/home');
         }
     }, [login]);

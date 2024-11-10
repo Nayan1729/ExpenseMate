@@ -96,7 +96,7 @@ function GoogleContacts() {
     const message = `Hey! Join me on https://www.google.co.in/. Click the link to sign up: https://www.google.co.in/`;
     
     // URL encode the message
-    const encodedMessage = encodeURIComponent(message);
+    const encodedMessage = (message);
   
     // Construct the WhatsApp link
     const whatsappLink = `https://wa.me/${cleanedPhone}?text=${encodedMessage}`;
@@ -113,7 +113,7 @@ function GoogleContacts() {
     <div>
       <button
         onClick={() => window.tokenClient.requestAccessToken()}
-        className="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-2 rounded-md shadow-md transition duration-200"
+        className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-2 rounded-md shadow-md transition duration-200"
       >
         Sync Contacts
       </button>

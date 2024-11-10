@@ -8,7 +8,6 @@ const App = () => {
     console.log("inside app");
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    useEffect(()=>{
         ;(async () => {
             try {
                 console.log("inside useEffect of app");
@@ -18,8 +17,8 @@ const App = () => {
                 
                 if (res.success) {
                     console.log("inside the if of useEffect of app");
-                    dispatch(loginUser(res.message.data));
-
+                    dispatch(loginUser(res.data));
+                    
                     navigate('/home');
                 } else {
                     console.log("inside tthe else of useEffect of app");
@@ -31,7 +30,6 @@ const App = () => {
                 navigate('/login'); // Navigate to login on error
             }
           })();
-    })
     return (
         <>
             

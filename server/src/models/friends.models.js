@@ -1,35 +1,37 @@
+import mongoose from "mongoose";
 const friendSchema = new mongoose.Schema({
-    userId: { 
+    user1: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User', 
         required: true 
     },
-    friendId: { 
+    user2: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User', 
         required: true 
     },
-    status: {
-        type: String,
-        enum: ['pending', 'accepted', 'rejected'],
-        default: 'pending',
-    },
-    requestedAt: { type: Date, default: Date.now },
-    acceptedAt: { type: Date },
 }, { timestamps: true });
 
-    // Additional methods
-
-    friendSchema.methods.acceptRequest = function () {
-        this.status = 'accepted';
-        this.acceptedAt = Date.now();
-        return this.save();
-    };
+friendSchema.statics.createFriendShip = async function(user1,user2){
+    console.log("inside create Friend of FriendsModel");
     
-    friendSchema.methods.rejectRequest = function () {
-        this.status = 'rejected';
-        return this.save();
-    };
-
+   try {
+     const isExistingFriendship = await this.findOne({
+         $or:[
+             {user1,user2},
+             {user1:user2 , user2:user1}
+         ]
+     });
+     console.log("isExistingFriendship"+isExistingFriendship);
+     
+     if(!isExistingFriendship){
+         return await this.create({user1,user2});
+     }
+     return null;
+   } catch (error) {
+        console.log(error.message);
+            
+   }
+}
     
 export const Friend = mongoose.model('Friend', friendSchema);

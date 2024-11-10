@@ -1,10 +1,9 @@
 import React from 'react'
-import InputField from './InputField'
-import InviteInput from './InviteInput'
-import GoogleContacts from './GoogleContacts'
+import {InviteInput,GoogleContacts,Navbar} from "./index"
 function Home() {
   return (
     <>
+    <Navbar/>
   <InviteInput/>
   <GoogleContacts />
     

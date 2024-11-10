@@ -9,7 +9,7 @@ function Loader() {
   ></div>
   <h2 class="text-zinc-900 dark:text-white mt-4">Loading...</h2>
   <p class="text-zinc-600 dark:text-zinc-400">
-    Your contacts are being loaded
+    Content is being loaded
   </p>
 </div>
 </div>

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import Loader from './Loader'
 
-export default function Protected({children,authentication=true}) {
+export default function AuthRouter({children,authentication=true}) {
 	const navigate = useNavigate()
 	const dispatch =useDispatch()
 	const [loader, setLoader] = useState(true)

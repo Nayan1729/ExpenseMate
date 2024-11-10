@@ -1,38 +1,60 @@
 import React,{useEffect} from 'react';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import InputField from './InputField';
 import { SignUpValidationSchema } from '../schema/SignUpValidation';
-import { signUpApi } from '../apiEndPoints';
+import { acceptInvitaion, signUpApi } from '../apiEndPoints';
 import { useNavigate } from 'react-router-dom';
 import {useDispatch,useSelector} from "react-redux"
+import { useLocation } from 'react-router-dom';
 import { loginUser } from '../store/userSlice';
-import { getCurrentUser } from '../apiEndPoints';
+
+import { getCurrentUser,createFriendship } from '../apiEndPoints';
 const SignUpForm = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const loginStatus = useSelector(state=>state.user.status);
-    if(loginStatus)navigate('home');
+    const location = useLocation();
+
+    const query = new URLSearchParams(location.search);
+    const token = query.get('token')
+    let navigateTo;
+  
+    const loginStatus = useSelector(state=>state?.user?.status);
+    let navigateToRegister , navigateToLogin;
     useEffect(()=>{
+        if(token){
+             navigateToRegister = `/register?token=${token}`;
+             navigateToLogin = `/login?token=${token}`;
+        }else{
+            navigateToRegister = `/register`; 
+            navigateToLogin    = `/login`;
+        }
+        if(loginStatus)navigate('/home');
         ;(async () => {
             try {
-                console.log("inside useEffect of app");
+                console.log("inside useEffect of signUp component");
                 
                 const res = await getCurrentUser();
-                console.log("After the getCurrentUser");
+                console.log(res);
+                
                 
                 if (res?.success) {
-                    console.log("inside the if of useEffect of app");
+                    
                     dispatch(loginUser(res.data));
-
+                    
+                    if(token){
+                        console.log(token);
+                        
+                        console.log("Inside the signup's token if");
+                        await createFriendship();
+                    }
                     navigate('/home');
                 } else {
-                    console.log("inside tthe else of useEffect of app");
+                    console.log("inside the else of useEffect of app");
                     
                 }
             } catch (error) {
                 console.error('Error fetching user data:', error);
-                navigate('/register'); // Navigate to login on error
+                navigate(navigateToRegister); // Navigate to login on error
             }
           })();
     },[navigate,dispatch])
@@ -48,16 +70,41 @@ const SignUpForm = () => {
         onSubmit: async (values) => {
             // API call for signing up
             const res = await signUpApi(values);
-            console.log(res.message);
             const userData = res.message.data;
-            if(res.success){
-                dispatch(loginUser(userData))
-                console.log("Hello");
+            if (res.success) {
+                // Login user
+                dispatch(loginUser(userData));
                 
+                console.log("Hello in the onSubmit of signUp form");
+        
+                // If there's a token, handle invitation acceptance and friendship creation
+                if (token) {
+                    console.log("Token found:", token);
+                    
+                    // Accept invitation
+                    const invitationResponse = await acceptInvitaion(token);
+                    if (invitationResponse.success) {
+                        console.log(invitationResponse);
+                        
+                        const senderId = invitationResponse.data.senderId;
+                        console.log("Invitation accepted from sender:", senderId);
+        
+                        // Create friendship
+                        const userId = userData._id;
+                        console.log(userId , senderId );
+                        
+                        const friendshipResponse = await createFriendship(userId, senderId);
+                        console.log("Friendship created:", friendshipResponse);
+                    } else {
+                        console.log("Failed to accept invitation");
+                    }
+                }
+                
+                // Only navigate after all actions are complete
                 navigate("/home");
             }
-        },
-    });
+        }
+            });
 
     return (
         <div className="max-w-md mx-auto mt-10 p-8 bg-white shadow-lg rounded-lg">
@@ -123,7 +170,10 @@ const SignUpForm = () => {
             <p className="text-center mt-4">
                 Already have an account?{' '}
                 <span
-                    onClick={() => navigate('/login')}
+                    onClick={() => {
+                        navigate(navigateToLogin)
+                    }}
+
                     className="text-blue-500 hover:underline cursor-pointer"
                 >
                     Log In

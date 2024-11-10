@@ -1,3 +1,4 @@
+import { response } from "express";
 import nodemailer from "nodemailer";
 
 const sendEmail = async (receiverEmail, subject, text) => {
@@ -13,7 +14,7 @@ const transporter = nodemailer.createTransport({
 });
 
   const mailOptions = {
-    from: `"ExpenseMate" <${process.env.EMAIL}>`,  
+    from: `"ExpenseMate" ${process.env.GMAIL_EMAIL}`,  
     to: receiverEmail,  
     subject: subject,   
     text: text,        
@@ -25,7 +26,7 @@ const transporter = nodemailer.createTransport({
     return { success: true, response: info.response };
   } catch (error) {
     console.log("Error sending email: ", error.message);
-    return { success: false, error: error.message };
+    return { success: false, response: error.message };
   }
 };
 

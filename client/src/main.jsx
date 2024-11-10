@@ -5,10 +5,12 @@ import App from './App.jsx'
 import {Provider} from "react-redux"
 import {createBrowserRouter,RouterProvider} from "react-router-dom"
 import store from "./store/store.js"
-import Login from './components/Login.jsx'
-import SignUp from './components/SignUp.jsx'
-import Home from './components/Home.jsx'
+import Login from './pages/Login.jsx'
+import SignUp from './pages/SignUp.jsx'
+import Home from './pages/Home.jsx'
 import AuthLayout from './components/ProtectedRoute.jsx'
+import InviteInput from './components/InviteInput.jsx'
+import InviteSignUp from './pages/InviteSignUp.jsx'
 const router = createBrowserRouter([
   {
     path:'/',
@@ -42,6 +44,14 @@ const router = createBrowserRouter([
                 <Home />
               </AuthLayout>
             )
+  },
+  {
+    path:'/invite',
+    element:(
+      <AuthLayout authentication={false}>
+        <InviteSignUp />
+      </AuthLayout>
+    )
   }
 ])
 

@@ -15,4 +15,14 @@ app.use(cookieParser());
 // User routes
 import userRouter from "./routes/user.routes.js";
 app.use("/api/v1/users",userRouter);    
+
+//Invitation routes
+import invitationRouter from "./routes/invitation.routes.js"
+app.use("/api/v1/invite",invitationRouter);
+
+
+// Friend routed
+import friendRouter from "./routes/friend.routes.js";
+app.use("/api/v1/friend",friendRouter);
+
 export default app;
