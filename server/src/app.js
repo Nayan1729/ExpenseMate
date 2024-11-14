@@ -25,4 +25,8 @@ app.use("/api/v1/invite",invitationRouter);
 import friendRouter from "./routes/friend.routes.js";
 app.use("/api/v1/friend",friendRouter);
 
+//Expense Router
+import expenseRouter from "./routes/expense.routes.js";
+app.use("/api/v1/expense",expenseRouter);
+
 export default app;

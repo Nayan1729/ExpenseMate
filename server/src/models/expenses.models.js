@@ -1,5 +1,6 @@
+import mongoose,{model} from "mongoose";
 const expenseSchema = new mongoose.Schema({
-    title: {
+    description: {
         type: String,
         required: true,
         trim: true,
@@ -8,6 +9,11 @@ const expenseSchema = new mongoose.Schema({
         type: Number,
         required: true,
         min: 0,
+    },
+    category : {
+      type:String,
+      required:true,
+      default:'other'  
     },
     paidBy: {
         type: mongoose.Schema.Types.ObjectId,
@@ -25,23 +31,23 @@ const expenseSchema = new mongoose.Schema({
     }],
     splitType: {
         type: String,
-        enum: ['equal', 'percentage', 'exact'], // Determines the split calculation
+        enum: ['equally', 'percentage', 'exact'], // Determines the split calculation
         required: true,
     },
 }, { timestamps: true });
 
     // Additional Methods
 
-    expenseSchema.methods.calculateSplit = function () {
-        if (this.splitType === 'equal') {
+    expenseSchema.methods.calculateSplit =async function () {
+        if (this.splitType === 'equally') {
             const splitAmount = this.amount / this.participants.length;
             this.participants.forEach(participant => {
                 participant.amountOwed = splitAmount;
             });
         }
+        await this.save();
         // Additional split calculations for 'percentage' and 'exact' types could go here
         return this;
     };
-    
 
-const Expense = mongoose.model('Expense', expenseSchema);
+export const  Expense = model('Expense', expenseSchema);

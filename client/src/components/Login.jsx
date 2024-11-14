@@ -40,6 +40,16 @@ const LoginForm = () => {
             navigate('/home');
         }
     }, [login]);
+
+    /*
+    What onBlur Does
+
+        Tracks User Interaction: When a user leaves the field, Formik sets that field as touched in the form’s state. 
+        You can access this with formik.touched.username.
+
+        Triggers Validation: When onBlur is called, Formik will validate the field if validateOnBlur is true (which it is by default).
+         This validation can then display any errors tied to that field in formik.errors.
+    */
     const formik = useFormik({
         initialValues: {
             email: '',

@@ -113,7 +113,7 @@ function GoogleContacts() {
     <div>
       <button
         onClick={() => window.tokenClient.requestAccessToken()}
-        className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-2 rounded-md shadow-md transition duration-200"
+        className="bg-orange-500 hover:bg-orange-600 text-white font-normal px-2 py-2 rounded-md shadow-md transition duration-200"
       >
         Sync Contacts
       </button>

@@ -2,7 +2,7 @@ import ApiError from "../utilities/ApiError.js";
 import ApiRespose from "../utilities/ApiResponse.js";
 import asyncHandler from "../utilities/asyncHandler.js";
 import { Friend } from "../models/friends.models.js";
-
+import { User } from "../models/users.models.js";
 const createFriendship = asyncHandler(async (req, res) => {
     try {
         console.log("Inside createFriendship endpoint");
@@ -35,5 +35,50 @@ const createFriendship = asyncHandler(async (req, res) => {
 });
 
 
+const getFriends = asyncHandler(async(req,res)=>{
+   try {
+     const userId = req.user._id;
+     const friends = await Friend.aggregate([
+         {
+             $match:{
+                 $or:[
+                     {user1:userId},
+                     {user2:userId}
+                 ]
+             }
+         },
+         {
+                 $project:{
+                     friendId:{
+                         $cond: {if:{$eq:["$user1",userId]},then:"$user2",else:"$user1"}
+                     }
+                 }
+         },
+         {
+             $lookup:{
+                 from : "users",
+                 localField:"friendId",
+                 foreignField:"_id",
+                 as: "friendDetails"
+             }
+         },
+         {
+            $unwind:"$friendDetails"
+         },
+         {
+             $project:{
+                 _id:"$friendDetails._id",
+                 username:"$friendDetails.username",
+                 email:"$friendDetails.email",
+                 mobileNo:"$friendDetails.mobileNo"
+             }
+         }
+         
+     ])
 
-export {createFriendship}
+     return res.status(200).json(new ApiRespose(200,friends,"Friends fetched successfully"))
+   } catch (error) {
+        return res.status(error.status || 500).json(new ApiError(error.status || 500,error.message|| "Something went wrong will fetching Friend Details"))
+   }
+})
+export {createFriendship,getFriends}

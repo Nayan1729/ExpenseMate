@@ -26,10 +26,10 @@ const Navbar = () => {
 
   return (
     <nav className="bg-indigo-500 text-white fixed top-0 w-full flex justify-between items-center px-6 py-2 z-50 shadow-lg">
-      {/* Logo and App Name */}
+     
       <div className="flex items-center space-x-3">
         <Link to="/" className="flex items-center space-x-2">
-          <img src="/logo.png" alt="App Logo" className="h-8 w-8" /> {/* Replace with your logo path */}
+          <img src="/logo.png" alt="App Logo" className="h-8 w-8" /> 
           <span className="text-l font-semibold">ExpenseMate</span>
         </Link>
       </div>
@@ -41,7 +41,7 @@ const Navbar = () => {
         </div>
 
         {showDropdown && (
-          <div className="absolute right-0 mt-2 w-40 bg-white text-gray-800 rounded-lg shadow-lg">
+          <div className="absolute right-0 mt-3 w-40 bg-white text-gray-800  shadow-lg">
             <button
               onClick={() => navigate('/profile')}
               className="block w-full text-left px-4 py-2 hover:bg-gray-100"

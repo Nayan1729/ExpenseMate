@@ -43,7 +43,7 @@ export const loginApi = async(values)=>{
 
 export const getCurrentUser = async()=>{
     try {
-        const userResponse = await axios.post(`${base_url}/api/v1/users/getCurrentUser`, {}, { withCredentials: true });
+        const userResponse = await axios.get(`${base_url}/api/v1/users/getCurrentUser`,  { withCredentials: true });
         
         
         if(userResponse.data)
@@ -55,8 +55,6 @@ export const getCurrentUser = async()=>{
         
     }
 }
-
-
 
 //Invitation API's
 export const sendEmailInvite = async(email)=>{
@@ -125,5 +123,49 @@ export const createFriendship = async (user1,user2)=>{
         }
     } catch (error) {
         return{success:false,message:error.message};
+    }
+}
+
+
+import { setFriends } from "../store/friendSlice";
+export const getFriends = async()=>{
+  try {
+    const res = await axios.get(`${base_url}/api/v1/friend/getFriends`,{withCredentials:true});
+    const friends = res.data.data;
+
+    if(res.data.data==[]){
+      return{success:false , message:"No friends found"};
+    }
+    return {success:true , data: friends}
+  } catch (error) {
+    return {success:false , message:error.message}
+  }
+}
+
+//Expense Api's
+
+export const addExpense = async(values)=>{
+    try {
+        const res = await axios.post(`${base_url}/api/v1/expense/addExpense`,{
+            description : values.description,
+            amount: values.amount,
+            category : values.category,
+            payer: values.payer,
+            selectedFriends : values.selectedFriends,
+            splitType: values.splitType
+        },{withCredentials:true})
+        console.log(res);
+        if(res.statusText=="Created"){
+            return{ success:true , data:res.data.data}
+        }
+        else{
+            console.log(res.data.message);
+            
+            return{success:false,message:res.data.message}
+        }
+        
+    } catch (error) {
+        console.log(error.message);
+        return {success:false , message:error.message}
     }
 }
