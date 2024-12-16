@@ -6,13 +6,12 @@ when we encounter an error.
 class ApiError extends Error{
     constructor(
         statusCode,
-        message="Something went wrong",
+        message,
         errors = [],
         stack = ""
     ){
-        super(message); // To override the messagse
+        super(); // To override the messagse
         this.statusCode = statusCode;
-        this.data = null
         this.success = false
         this.message = message
         this.errors = errors

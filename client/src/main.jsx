@@ -9,7 +9,6 @@ import Login from './pages/Login.jsx'
 import SignUp from './pages/SignUp.jsx'
 import Home from './pages/Home.jsx'
 import AuthLayout from './components/ProtectedRoute.jsx'
-import InviteInput from './components/InviteInput.jsx'
 import InviteSignUp from './pages/InviteSignUp.jsx'
 const router = createBrowserRouter([
   {

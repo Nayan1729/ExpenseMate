@@ -8,14 +8,14 @@ const invitationSchema = new mongoose.Schema({
     },
     receiverEmail: { 
         type: String, 
-        required: true 
+        required: true
     },
     token: { 
         type: String, 
         required: true 
     },
-    status: { 
-        type: String, 
+    status: {
+        type: String,
         enum: ['pending', 'accepted', 'declined'],
         default: 'pending'
     },

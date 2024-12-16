@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react';
+import React,{useEffect,useState} from 'react';
 import { useFormik } from 'formik';
 import InputField from './InputField';
 import { SignUpValidationSchema } from '../schema/SignUpValidation';
@@ -11,6 +11,7 @@ import { loginUser } from '../store/userSlice';
 import { getCurrentUser,createFriendship } from '../apiEndPoints';
 const SignUpForm = () => {
     const navigate = useNavigate();
+    const [error,setError] = useState("");
     const dispatch = useDispatch();
     const location = useLocation();
 
@@ -69,10 +70,15 @@ const SignUpForm = () => {
         validationSchema: SignUpValidationSchema,
         onSubmit: async (values) => {
             // API call for signing up
+
             const res = await signUpApi(values);
+            setError(res.message)
+            console.log("res:",res);
+            
             const userData = res.message.data;
             if (res.success) {
                 // Login user
+                setError("");
                 dispatch(loginUser(userData));
                 
                 console.log("Hello in the onSubmit of signUp form");
@@ -106,6 +112,7 @@ const SignUpForm = () => {
         }
             });
 
+        
     return (
         <div className="max-w-md mx-auto mt-10 p-8 bg-white shadow-lg rounded-lg">
             <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">Sign Up</h2>
@@ -167,6 +174,7 @@ const SignUpForm = () => {
                     {formik.isSubmitting ? 'Signing up...' : 'Sign Up'}
                 </button>
             </form>
+            <p className='text-center text-red-600'>{error}</p>
             <p className="text-center mt-4">
                 Already have an account?{' '}
                 <span
@@ -179,6 +187,7 @@ const SignUpForm = () => {
                     Log In
                 </span>
             </p>
+            
         </div>
     );
 };

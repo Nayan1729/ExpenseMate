@@ -10,7 +10,6 @@ const base_url = conf.baseUrl;
     
 */
 
-
 //User API's
 export const signUpApi = async(values)=>{
     console.log("BAseURL:"+base_url);
@@ -21,9 +20,13 @@ try {
             password:values.password,
             mobileNo:values.mobileNo
         },{ withCredentials: true })
+        console.log("Inside the signUp api");
+        
         return {success:true,message:res.data};
 } catch (error) {
-        return {success:false,error:error.message}
+    console.log("errorrrrrrr::",error);
+
+        return {success:false,message:error.response.data.message}
     }
 }
 
@@ -37,22 +40,21 @@ export const loginApi = async(values)=>{
             
             return {success:true,data:res.data};
     } catch (error) {
-            return {success:false,error:error.message}
+            return {success:false,message:error.response.data.message}
         }
 }
 
 export const getCurrentUser = async()=>{
     try {
         const userResponse = await axios.get(`${base_url}/api/v1/users/getCurrentUser`,  { withCredentials: true });
-        
-        
+
         if(userResponse.data)
         return {success:true,data:userResponse.data.data};
         return {success:false,message:userResponse.message};
         
     } catch (error) {
-        console.log("error fetching the userr");
-        
+        console.log("error fetching the user");
+        return {success:false,message:error.response.data.message}
     }
 }
 
@@ -65,7 +67,7 @@ export const sendEmailInvite = async(email)=>{
         return {success:true,data:res.data};
         
     } catch (error) {
-        return {success:false,error:error.message};
+        return {success:false,message:error.response.data.message};
     }
 }
 export const verifyInvitaionToken = async(token)=>{
@@ -82,7 +84,7 @@ export const verifyInvitaionToken = async(token)=>{
             return {success:false,message:res.data.message}
         }
     } catch (error) {
-        return {success:false,message:error.message}
+        return {success:false,message:error.response.data.message}
     }
 }
 
@@ -102,7 +104,7 @@ export const acceptInvitaion = async (token)=>{
                 return {success:false,message:res.data.message}
             }
         } catch (error) {
-            return {success:false,message:error.message}
+            return {success:false,message:error.response.data.message}
         }
 }
 
@@ -122,12 +124,11 @@ export const createFriendship = async (user1,user2)=>{
             return{success:false,message:"Couldnt create Friendship"};
         }
     } catch (error) {
-        return{success:false,message:error.message};
+        return{success:false,message:error.response.data.message};
     }
 }
 
 
-import { setFriends } from "../store/friendSlice";
 export const getFriends = async()=>{
   try {
     const res = await axios.get(`${base_url}/api/v1/friend/getFriends`,{withCredentials:true});
@@ -138,7 +139,7 @@ export const getFriends = async()=>{
     }
     return {success:true , data: friends}
   } catch (error) {
-    return {success:false , message:error.message}
+    return {success:false , message:error.response.data.message}
   }
 }
 
@@ -160,12 +161,28 @@ export const addExpense = async(values)=>{
         }
         else{
             console.log(res.data.message);
-            
             return{success:false,message:res.data.message}
         }
         
     } catch (error) {
         console.log(error.message);
-        return {success:false , message:error.message}
+        return {success:false , message:error.response.data.message}
     }
+}
+
+export const fetchExpenses = async()=>{
+    try {
+        
+        const res = await axios.get(`${base_url}/api/v1/expense/fetchExpenses`,{withCredentials:true});
+        const expenses  = res.data.data
+        if(res.statusText=="OK"){
+            return {success:true , data:expenses};
+        }
+        else{
+            return {success:false,message:res.data.message};
+        }
+    } catch (error) {
+        return {success:false,message:error.response.data.message};
+    }
+    
 }

@@ -25,7 +25,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="bg-indigo-500 text-white fixed top-0 w-full flex justify-between items-center px-6 py-2 z-50 shadow-lg">
+    <nav className="bg-indigo-500 text-white fixed top-0 w-full flex justify-between items-center px-6 py-2 z-50 shadow-lg mb-20">
      
       <div className="flex items-center space-x-3">
         <Link to="/" className="flex items-center space-x-2">

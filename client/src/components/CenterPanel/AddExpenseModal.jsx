@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
-import ExpenseForm from './ExpenseForm';
+import ExpenseForm from './ExpenseForm/ExpenseForm';
 
 const AddExpenseModal = ({ onClose }) => {
   return (

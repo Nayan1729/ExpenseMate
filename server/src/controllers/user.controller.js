@@ -30,7 +30,7 @@ const options =  { // Options have to be added to send cookies
         await userInDatabase.save();
         return {accessToken,refreshToken};
     } catch (error) {
-        throw new ApiError(400,"Error while generating access and tokens")
+        return res.status(400).json(new ApiError(400,"Error while generating access and tokens"));
     }
   }
 
@@ -42,15 +42,18 @@ const options =  { // Options have to be added to send cookies
         if ([email, password, username, mobileNo].some((field) => field?.trim() === "")) {
             throw new ApiError(400, "All fields are required");
         }
-    
+        
         // Check if email already exists
         const emailExists = await User.findOne({ email });
         if (emailExists) {
             throw new ApiError(400, "Email is already in use");
         }
-    
+        console.log("Email Exists: ",emailExists);
+        
         // Check if username already exists
         const usernameExists = await User.findOne({ username });
+        console.log("usernameExists",usernameExists);
+        
         if (usernameExists) {
             throw new ApiError(400, "Username is already in use");
         }
@@ -84,7 +87,9 @@ const options =  { // Options have to be added to send cookies
             .json(new ApiResponse(200, createdUser, "User Registered and Logged in Successfully"));
     } catch (error) {
         const statusCode = error.status || 500;
-        return res.status(statusCode).json(new ApiError(statusCode,error.message||"Error while registering User"))
+        console.log("Error in signup:",error.message);
+        
+        return res.status(statusCode).json(new ApiError(statusCode, error.message));
     }
 });
 
@@ -126,6 +131,8 @@ const loginUser = asyncHandler(async(req,res)=>{
 })
 const getCurrentUser = asyncHandler ( async(req,res)=>{
     try {
+        console.log("Inside the getCurrentUser");
+        
         return res
                   .status(200)
                   .json(new ApiResponse(200,req.user,"Current user fetched successfully"))
@@ -145,8 +152,9 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     This approach can be more secure in certain contexts, such as when dealing with cross-origin requests where cookies might not be sent.
     
     */
+     
     if (!incomingRefreshToken) {
-        throw new ApiError(401, "unauthorized request")
+        throw new ApiError(401, "Unauthorized request")
     }
     try {
         const decodedToken = jwt.verify(
@@ -154,17 +162,17 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
             process.env.REFRESH_TOKEN_SECRET
         )
         const user = await User.findById(decodedToken?._id)
-    
         if (!user) {
             throw new ApiError(401, "Invalid refresh token")
         }
-
+        
+        
         if (incomingRefreshToken !== user?.refreshToken) {
             throw new ApiError(401, "Refresh token is expired or used")
-            
         }
         
         const {accessToken, newRefreshToken} = await generateAccessAndRefreshToken(user._id)
+       
         // This token has been saved in the database in the usre as well and it is only left to propogate it to the user in the form of cookie
         return res
         .status(200)
@@ -180,7 +188,6 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     } catch (error) {
         return res.status(401).json(new ApiError(401, error.message || "Invalid refresh token"));
     }
-
   })
 
 export {registerUser,loginUser,getCurrentUser,refreshAccessToken}

@@ -12,21 +12,22 @@ const LoginForm = () => {
     const status = useSelector(state=>state.user?.status);
     const [loader,setLoader] = useState(true);
     // console.log("status in login Form"+status);
-    
-    const [login,setLogin]=useState(status);
+
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (!login) {   
+        if (!status) {   
             ;(async () => {
                 try {
                     setLoader(true)
+                    console.log("inside the getCurrent user in login");
+                    
                     const res = await getCurrentUser();
                     setLoader(false);
                     if (res.success) {
                         dispatch(loginUser(res.data));
-                        setLogin(true);
+                        
                         navigate('/home');
                     } else {
                         navigate('/login'); 
@@ -39,7 +40,7 @@ const LoginForm = () => {
 
             navigate('/home');
         }
-    }, [login]);
+    }, []);
 
     /*
     What onBlur Does
@@ -61,7 +62,6 @@ const LoginForm = () => {
             const res = await loginApi(values);
             const userData = res.data;
             if(res.success){
-                setLogin(true);
                 dispatch(loginUser(userData));
                 navigate('/home');
             }
@@ -117,7 +117,6 @@ const LoginForm = () => {
         );
     }
 };
-
 export default LoginForm;
 
 

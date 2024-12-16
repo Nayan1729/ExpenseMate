@@ -66,5 +66,27 @@ const inviteUsingEmail = asyncHandler(async(req,res)=>{
             return new ApiError(error.status || 400, error.message || "Error while accepting token");
         }
     });
+    const getPendingInvitations = asyncHandler(async(req,res)=>{
+        try {
+            const userId = req.user._id;
+            const receiverEmail = req.user.email;
+            const pendingInvitations = await Invitation.aggregate([
+                {
+                    $match:{
+                        $and:[
+                            {status:'pending'},
+                            {
+                                $or:[
+                                    {senderId:userId},
+                                    {receiverEmail}
+                            ]}
+                        ]
+                    }
+                },
 
-export {inviteUsingEmail,verifyToken,acceptInvitation}
+            ])
+        } catch (error) {
+            
+        }
+    })
+export {inviteUsingEmail,verifyToken,acceptInvitation,getPendingInvitations}

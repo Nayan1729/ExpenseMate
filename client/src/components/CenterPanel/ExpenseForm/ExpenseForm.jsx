@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useFormik } from 'formik';
-import { ExpenseFormSchema } from '../../schema/ExpenseFormValidation';
-import { InputField, FriendSelector, PayerDialog } from '../index';
+import { ExpenseFormSchema } from '../../../schema/ExpenseFormValidation';
+import { InputField, FriendSelector, PayerDialog } from '../../index';
 import { useSelector, useDispatch } from 'react-redux';
-import { addExpense } from '../../apiEndPoints';
-
+import { addExpense as addExpenseApi } from '../../../apiEndPoints';
+import { addExpense as dispatchAddExpense} from '../../../store/expenseSlice';
 const ExpenseForm = ({ onClose }) => {
   const dispatch = useDispatch();
   const friends = useSelector(state => state.friends.list);
@@ -16,7 +16,7 @@ const ExpenseForm = ({ onClose }) => {
   const formik = useFormik({
     initialValues: {
       description: '',
-      amount: '',
+      amount:0,
       category: 'food',
       selectedFriends: [currentUsername],
       payer: 'You', // New field for selected payer
@@ -26,14 +26,12 @@ const ExpenseForm = ({ onClose }) => {
     validationSchema: ExpenseFormSchema,
     onSubmit: async (values) => {
       console.log('Form Data:', values);
-      const res = await addExpense(values);
+      const res = await addExpenseApi(values);
       const newExpense = res.data;
-      
+      dispatch(dispatchAddExpense(newExpense));
       onClose();
     },
   });
-
- 
 
   return (
     <form onSubmit={formik.handleSubmit} className="space-y-4">

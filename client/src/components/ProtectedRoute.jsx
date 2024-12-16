@@ -9,6 +9,9 @@ export default function AuthRouter({children,authentication=true}) {
 	const [loader, setLoader] = useState(true)
 	const authStatus = useSelector(state=>state.user.status)
 	useEffect(()=>{
+		console.log("inside the authrouter");
+		console.log(authStatus,authentication);
+		
 		if(authentication && authStatus!== authentication ){
 			console.log("Done have authentication in protected route");
 			

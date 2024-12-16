@@ -27,6 +27,7 @@ const expenseSchema = new mongoose.Schema({
     },
     participants: [{
         userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+        username:{type:String,required:true},
         amountOwed: { type: Number, required: true }, // Amount this participant owes
     }],
     splitType: {
